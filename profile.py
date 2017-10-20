@@ -9,7 +9,9 @@ TBD
 import geni.portal as portal
 # Import the ProtoGENI library.
 import geni.rspec.pg as pg
+
 import geni.urn as urn
+import geni.aggregate.cloudlab as cloudlab
 
 # Create a portal context.
 pc = portal.Context()
