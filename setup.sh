@@ -9,7 +9,7 @@ apt-get --assume-yes install nfs-kernel-server nfs-common
 
 # Java
 apt-get --assume-yes install openjdk-6-jdk
-export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-amd64
+echo "export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-amd64" >> ~/.bashrc
 
 # For git commit messages
-export EDITOR=vim
+echo "export EDITOR=vim" >> ~/.bashrc
