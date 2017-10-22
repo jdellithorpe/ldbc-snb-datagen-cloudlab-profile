@@ -8,7 +8,7 @@ apt-get --assume-yes install mosh vim tmux pdsh tree axel
 apt-get --assume-yes install nfs-kernel-server nfs-common
 
 # Java
-apt-get --assume-yes install openjdk-6-jdk
+apt-get --assume-yes install openjdk-6-jdk maven
 echo "export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-amd64" >> ~/.bashrc
 
 # For git commit messages
