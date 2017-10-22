@@ -13,3 +13,8 @@ echo "export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-amd64" >> ~/.bashrc
 
 # For git commit messages
 echo "export EDITOR=vim" >> ~/.bashrc
+
+cat > ~/.ssh/config <<EOM
+Host *
+    StrictHostKeyChecking no
+EOM
