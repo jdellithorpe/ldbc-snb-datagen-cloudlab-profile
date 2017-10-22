@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Do this from User's home folder
+cd ~
+
 # Install common utilities
 apt-get update
 apt-get --assume-yes install mosh vim tmux pdsh tree axel
@@ -22,4 +25,3 @@ EOM
 # Download Hadoop
 wget http://archive.apache.org/dist/hadoop/core/hadoop-2.6.0/hadoop-2.6.0.tar.gz
 tar -xvzf hadoop-2.6.0.tar.gz
-
