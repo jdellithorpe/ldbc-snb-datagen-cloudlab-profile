@@ -1,7 +1,5 @@
 #!/bin/bash
-USERNAME="jde"
-
-sudo su $USERNAME
+sudo su jde
 cd ~
 
 # Install common utilities
