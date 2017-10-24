@@ -56,10 +56,6 @@ for name in node_names:
   node.hardware_type = params.hardware_type
   node.disk_image = urn.Image(cloudlab.Utah,"emulab-ops:%s" % params.image)
   
-  # Install and execute a script that is contained in the repository.
-  node.addService(pg.Execute(shell="sh", 
-      command="sudo /local/repository/setup.sh"))
-
   iface = node.addInterface("if1")
 
   clan.addInterface(iface)
