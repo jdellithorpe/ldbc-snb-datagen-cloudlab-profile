@@ -22,6 +22,8 @@ Host *
     StrictHostKeyChecking no
 EOM
 
+sudo touch haha.txt
+
 env > info.txt
 
 # Download Hadoop
