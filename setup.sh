@@ -22,9 +22,7 @@ Host *
     StrictHostKeyChecking no
 EOM
 
-sudo touch haha.txt
-
-env > info.txt
+env > ~/info.txt
 
 # Download Hadoop
 wget http://archive.apache.org/dist/hadoop/core/hadoop-2.6.0/hadoop-2.6.0.tar.gz
