@@ -57,8 +57,7 @@ for name in node_names:
   node.disk_image = urn.Image(cloudlab.Utah,"emulab-ops:%s" % params.image)
   
   # Install and execute a script that is contained in the repository.
-  node.addService(pg.Execute(shell="sh", 
-      command="sudo /local/repository/setup.sh"))
+  node.addService(pg.Execute(shell="sh", command="/local/repository/setup.sh"))
 
   iface = node.addInterface("if1")
 
