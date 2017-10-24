@@ -37,3 +37,4 @@ cd $HOME
 wget http://archive.apache.org/dist/hadoop/core/hadoop-2.6.0/hadoop-2.6.0.tar.gz
 chown $USERNAME:ramcloud-PG0 hadoop-2.6.0.tar.gz
 tar -xvzf hadoop-2.6.0.tar.gz
+chown -R $USERNAME:ramcloud-PG0 hadoop-2.6.0
