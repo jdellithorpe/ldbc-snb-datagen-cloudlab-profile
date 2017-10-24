@@ -1,17 +1,14 @@
 #!/bin/bash
 
 # Install common utilities
-apt-get update
-apt-get --assume-yes install mosh vim tmux pdsh tree axel
+sudo apt-get update
+sudo apt-get --assume-yes install mosh vim tmux pdsh tree axel
 
 # NFS
-apt-get --assume-yes install nfs-kernel-server nfs-common
+sudo apt-get --assume-yes install nfs-kernel-server nfs-common
 
 # Java
-apt-get --assume-yes install openjdk-6-jdk maven
-
-su jde
-cd ~
+sudo apt-get --assume-yes install openjdk-6-jdk maven
 
 # Modify bashrc
 cat > ~/.bashrc <<EOM
