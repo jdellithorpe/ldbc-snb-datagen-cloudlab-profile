@@ -1,4 +1,8 @@
 #!/bin/bash
+USERNAME="jde"
+
+sudo su $USERNAME
+cd ~
 
 # Install common utilities
 sudo apt-get update
@@ -27,4 +31,3 @@ env > ~/info.txt
 # Download Hadoop
 wget http://archive.apache.org/dist/hadoop/core/hadoop-2.6.0/hadoop-2.6.0.tar.gz
 tar -xvzf hadoop-2.6.0.tar.gz
-
