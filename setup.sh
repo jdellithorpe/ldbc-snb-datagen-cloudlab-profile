@@ -26,4 +26,4 @@ EOM
 wget http://archive.apache.org/dist/hadoop/core/hadoop-2.6.0/hadoop-2.6.0.tar.gz
 tar -xvzf hadoop-2.6.0.tar.gz
 
-echo "test"
+echo $USER > /home/jde/username.txt
