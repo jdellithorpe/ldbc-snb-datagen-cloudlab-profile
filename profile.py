@@ -55,7 +55,10 @@ for name in node_names:
   node = request.RawPC(name)
   node.hardware_type = params.hardware_type
   node.disk_image = urn.Image(cloudlab.Utah,"emulab-ops:%s" % params.image)
-  
+
+  node.addService(pg.Execute(shell="sh", 
+      command="sudo /local/repository/setup.sh"))
+
   iface = node.addInterface("if1")
 
   clan.addInterface(iface)
