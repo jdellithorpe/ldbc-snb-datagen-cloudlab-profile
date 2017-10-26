@@ -15,6 +15,7 @@
 <configuration>
 
 <!-- Site specific YARN configuration properties -->
+
     <property>
         <name>yarn.resourcemanager.hostname</name>
         <value>master</value>
@@ -46,5 +47,25 @@
     <property>
         <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
         <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+   </property>
+
+<!-- Memory Settings -->
+
+   <property>
+        <name>yarn.nodemanager.resource.memory-mb</name>
+        <value>50000</value>
     </property>
+    <property>
+        <name>yarn.scheduler.minimum-allocation-mb</name>
+        <value>1024</value>
+    </property>
+    <property>
+        <name>yarn.scheduler.maximum-allocation-mb</name>
+        <value>16384</value>
+    </property>
+    <property>
+        <name>yarn.nodemanager.vmem-pmem-ratio</name>
+        <value>2.1</value>
+    </property>
+
 </configuration>
