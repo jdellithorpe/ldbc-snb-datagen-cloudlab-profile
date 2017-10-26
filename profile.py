@@ -58,7 +58,7 @@ for name in node_names:
 
   # Ask for a 200GB file system mounted at /local/hadoop
   # This is for all hadoop related data
-  bs = node.Blockstore("bs", "/local/hadoop")
+  bs = node.Blockstore(name + ":bs", "/local/hadoop")
   bs.size = "200GB"
 
   node.addService(pg.Execute(shell="sh", 
