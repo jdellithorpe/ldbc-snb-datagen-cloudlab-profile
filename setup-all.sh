@@ -57,5 +57,14 @@ chmod -R g=u /opt/hadoop-2.6.0
 # Write hadoop configuration files
 cp /local/repository/hadoop.conf/* /opt/hadoop-2.6.0/etc/hadoop/
 
-# Make the hadoop data mount writable by users
+# Write out slaves hostnames into slaves file
+for host in ${hostnames[@]}:
+do
+  if [ "$host" != "master" ]
+  then
+    echo $host >> /opt/hadoop-2.6.0/etc/hadoop/slaves
+  fi
+done
+
+# Make the hadoop data directory writable by users
 chmod g=u /local/hadoop

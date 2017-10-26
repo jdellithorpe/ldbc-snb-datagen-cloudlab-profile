@@ -21,9 +21,4 @@
         <name>dfs.replication</name>
         <value>1</value>
     </property>
-
-    <property>
-        <name>dfs.namenode.hosts</name>
-        <value>n01, n02, n03, n04, n05, n06</value>
-    </property>
 </configuration>
