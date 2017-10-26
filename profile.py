@@ -36,7 +36,7 @@ pc.defineParameter("hardware_type", "Hardware Type",
 pc.defineParameter("image", "Disk Image",
         portal.ParameterType.IMAGE, images[0], images)
 
-pc.defineParameter("num_nodes", "Number of Hadoop Nodes", 
+pc.defineParameter("num_nodes", "Number of Hadoop Worker Nodes", 
     portal.ParameterType.INTEGER, 1, num_nodes)
 
 
