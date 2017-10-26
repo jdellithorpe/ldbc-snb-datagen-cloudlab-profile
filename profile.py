@@ -56,8 +56,18 @@ for name in node_names:
   node.hardware_type = params.hardware_type
   node.disk_image = urn.Image(cloudlab.Utah,"emulab-ops:%s" % params.image)
 
+  # Ask for a 200GB file system mounted at /local/hadoop
+  # This is for all hadoop related data
+  bs = node.Blockstore("bs", "/local/hadoop")
+  bs.size = "200GB"
+
   node.addService(pg.Execute(shell="sh", 
-      command="sudo /local/repository/setup.sh"))
+      command="sudo /local/repository/setup-all.sh"))
+
+  if name == "master":
+    node.addService(pg.Execute(shell="sh", 
+        command="sudo /local/repository/setup-master.sh"))
+
 
   iface = node.addInterface("if1")
 

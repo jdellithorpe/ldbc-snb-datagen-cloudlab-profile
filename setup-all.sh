@@ -47,3 +47,12 @@ do
   cp ~/.ssh/id_rsa /users/$user/.ssh/
   chown $user:ramcloud-PG0 /users/$user/.ssh/id_rsa
 done
+
+# Download hadoop-2.6.0 to /opt
+wget http://archive.apache.org/dist/hadoop/core/hadoop-2.6.0/hadoop-2.6.0.tar.gz -O /opt/hadoop-2.6.0.tar.gz
+tar -C /opt -xzf /opt/hadoop-2.6.0.tar.gz
+chown -R root:root /opt/hadoop-2.6.0
+chmod -R g=u /opt/hadoop-2.6.0
+
+# Write hadoop configuration files
+cp /local/repository/hadoop.conf/* /opt/hadoop-2.6.0/etc/hadoop/
