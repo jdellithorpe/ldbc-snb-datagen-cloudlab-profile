@@ -56,3 +56,6 @@ chmod -R g=u /opt/hadoop-2.6.0
 
 # Write hadoop configuration files
 cp /local/repository/hadoop.conf/* /opt/hadoop-2.6.0/etc/hadoop/
+
+# Make the hadoop data mount writable by users
+chmod g=u /local/hadoop
