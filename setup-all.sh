@@ -58,7 +58,7 @@ chmod -R g=u /opt/hadoop-2.6.0
 cp /local/repository/hadoop.conf/* /opt/hadoop-2.6.0/etc/hadoop/
 
 # Write out slaves hostnames into slaves file
-for host in ${hostnames[@]}:
+for host in ${hostnames[@]}
 do
   if [ "$host" != "master" ]
   then
