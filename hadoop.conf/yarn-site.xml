@@ -15,6 +15,10 @@
 <configuration>
 
 <!-- Site specific YARN configuration properties -->
+    <property>
+        <name>yarn.log-aggregation-enable</name>
+        <value>false</value>
+    </property>
 
     <property>
         <name>yarn.resourcemanager.hostname</name>
