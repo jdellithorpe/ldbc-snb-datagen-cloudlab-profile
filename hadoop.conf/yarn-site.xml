@@ -57,7 +57,7 @@
 
    <property>
         <name>yarn.nodemanager.resource.memory-mb</name>
-        <value>50000</value>
+        <value>30000</value>
     </property>
     <property>
         <name>yarn.scheduler.minimum-allocation-mb</name>
