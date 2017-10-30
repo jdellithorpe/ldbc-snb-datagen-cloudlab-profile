@@ -48,9 +48,10 @@ for i in range(params.num_nodes):
   node_names.append("n%02d" % (i + 1))
 
 # Setup a LAN for the clients
-clan = request.LAN()
-clan.best_effort = True
-clan.vlan_tagging = True
+if num_nodes > 0:
+  clan = request.LAN()
+  clan.best_effort = True
+  clan.vlan_tagging = True
 
 for name in node_names:
   node = request.RawPC(name)
@@ -75,10 +76,9 @@ for name in node_names:
     node.addService(pg.Execute(shell="sh", 
         command="sudo /local/repository/setup-master.sh"))
 
-
-  iface = node.addInterface("if1")
-
-  clan.addInterface(iface)
+  if num_nodes > 0:
+    iface = node.addInterface("if1")
+    clan.addInterface(iface)
 
 # Print the RSpec to the enclosing page.
 pc.printRequestRSpec(request)
