@@ -20,14 +20,15 @@ pc = portal.Context()
 request = pc.makeRequestRSpec()
 
 hardware_types = [ ("m510", "m510 (CloudLab Utah, Intel Xeon-D)"),
-                   ("m400", "m400 (CloudLab Utah, 64-bit ARM)") ]
+                   ("m400", "m400 (CloudLab Utah, 64-bit ARM)"),
+                   ("c220g2", "c220g2 (CloudLab Wisconsin, Two Intel E5-2660 v3)") ]
 
 images = [ ("UBUNTU14-64-STD", "Ubuntu 14.04"),
            ("UBUNTU15-04-64-STD", "Ubuntu 15.04"),
            ("UBUNTU16-64-STD", "Ubuntu 16.04")]
 
 # Create configuration parameter for the number of client nodes.
-num_nodes = range(1,1000)
+num_nodes = range(0,1000)
 
 pc.defineParameter("hardware_type", "Hardware Type",
                    portal.ParameterType.NODETYPE, 
@@ -54,7 +55,10 @@ clan.vlan_tagging = True
 for name in node_names:
   node = request.RawPC(name)
   node.hardware_type = params.hardware_type
-  node.disk_image = urn.Image(cloudlab.Utah,"emulab-ops:%s" % params.image)
+  if node.hardware_type == "c220g2":
+    node.disk_image = urn.Image(cloudlab.Wisconsin,"emulab-ops:%s" % params.image)
+  else:
+    node.disk_image = urn.Image(cloudlab.Utah,"emulab-ops:%s" % params.image)
 
   # Ask for a 200GB file system mounted at /local/hadoop
   # This is for all hadoop related data
