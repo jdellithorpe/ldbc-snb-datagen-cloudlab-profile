@@ -40,6 +40,8 @@ pc.defineParameter("image", "Disk Image",
 pc.defineParameter("num_nodes", "Number of Hadoop Worker Nodes", 
     portal.ParameterType.INTEGER, 1, num_nodes)
 
+pc.defineParameter("dataset_urn", "URN for Dataset Storage",
+    portal.ParameterType.IMAGE, "")
 
 params = pc.bindParameters()
 
@@ -53,6 +55,12 @@ if num_nodes > 0:
   clan.best_effort = True
   clan.vlan_tagging = True
 
+# Setup a LAN just for the dataset blockstore
+datasetbslan = request.LAN()
+datasetbslan.best_effort = True
+datasetbslan.vlan_tagging = True
+datasetbslan.link_multiplexing = True
+
 for name in node_names:
   node = request.RawPC(name)
   node.hardware_type = params.hardware_type
@@ -63,16 +71,22 @@ for name in node_names:
 
   # Ask for a 200GB file system mounted at /local/hadoop
   # This is for all hadoop related data
-  bs = node.Blockstore(name + "bs", "/local/hadoop")
+  localbs = node.Blockstore(name + "localbs", "/local/hadoop")
   if node.hardware_type == "c220g2":
-    bs.size = "1000GB"
+    localbs.size = "1000GB"
   else:
-    bs.size = "200GB"
+    localbs.size = "200GB"
 
   node.addService(pg.Execute(shell="sh", 
       command="sudo /local/repository/setup-all.sh"))
 
   if name == "master":
+    datasetbs = request.RemoteBlockstore("datasetbs", "/mnt/dataset", "if1")
+    datasetbs.dataset = params.dataset_urn
+    datasetbslan.addInterface(datasetbs.interface)
+    datasetbsiface = node.addInterface("if2")
+    datasetbslan.addInterface(datasetbsiface)
+    
     node.addService(pg.Execute(shell="sh", 
         command="sudo /local/repository/setup-master.sh"))
 
