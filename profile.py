@@ -54,6 +54,7 @@ if num_nodes > 0:
   clan = request.LAN()
   clan.best_effort = True
   clan.vlan_tagging = True
+  clan.link_multiplexing = True
 
 # Setup a LAN just for the dataset blockstore
 datasetbslan = request.LAN()
