@@ -81,6 +81,10 @@ for name in node_names:
   node.addService(pg.Execute(shell="sh", 
       command="sudo /local/repository/setup-all.sh"))
 
+  if num_nodes > 0:
+    iface = node.addInterface("if1")
+    clan.addInterface(iface)
+
   if name == "master":
     datasetbs = request.RemoteBlockstore("datasetbs", "/mnt/dataset", "if1")
     datasetbs.dataset = params.dataset_urn
@@ -90,10 +94,6 @@ for name in node_names:
     
     node.addService(pg.Execute(shell="sh", 
         command="sudo /local/repository/setup-master.sh"))
-
-  if num_nodes > 0:
-    iface = node.addInterface("if1")
-    clan.addInterface(iface)
 
 # Print the RSpec to the enclosing page.
 pc.printRequestRSpec(request)

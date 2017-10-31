@@ -12,18 +12,18 @@ apt-get --assume-yes install nfs-kernel-server nfs-common
 # Java stuff
 apt-get --assume-yes install openjdk-7-jdk maven
 
-# Collect hostnames and IPs in the cluster
+# Collect slave names and IPs in the cluster
 while read -r ip linkin linkout hostname
 do 
-  if [ "$ip" != "127.0.0.1" ] 
+  if [[ $hostname =~ ^n[0-9]+$ ]] 
   then
-    hostnames=("${hostnames[@]}" "$hostname") 
-    ips=("${ips[@]}" "$ip") 
+    slavenames=("${slavenames[@]}" "$hostname") 
+    slaveips=("${ips[@]}" "$ip") 
   fi 
 done < /etc/hosts
 
-IFS=$'\n' hostnames=($(sort <<<"${hostnames[*]}"))
-IFS=$'\n' ips=($(sort <<<"${ips[*]}"))
+IFS=$'\n' slavenames=($(sort <<<"${slavenames[*]}"))
+IFS=$'\n' slaveips=($(sort <<<"${slaveips[*]}"))
 unset IFS
 
 # Set some environment variables
@@ -31,8 +31,9 @@ cat > /etc/profile <<EOM
 
 export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
 export EDITOR=vim
-export PEERIDS="${ips[@]}"
-export HOSTNAMES="${hostnames[@]}"
+export SLAVEIPS="${slaveips[@]}"
+export SLAVENAMES="${slavenames[@]}"
+export HOSTNAMES="master ${slavenames[@]}"
 EOM
 
 # Modify ssh config
@@ -57,13 +58,10 @@ chmod -R g=u /opt/hadoop-2.6.0
 # Write hadoop configuration files
 cp /local/repository/hadoop.conf/* /opt/hadoop-2.6.0/etc/hadoop/
 
-# Write out slaves hostnames into slaves file
-for host in ${hostnames[@]}
+# Write out slave hostnames into slaves file
+for slave in ${slavenames[@]}
 do
-  if [ "$host" != "master" ]
-  then
-    echo $host >> /opt/hadoop-2.6.0/etc/hadoop/slaves
-  fi
+  echo $slave >> /opt/hadoop-2.6.0/etc/hadoop/slaves
 done
 
 # Make the hadoop data directory writable by users
