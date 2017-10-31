@@ -41,7 +41,7 @@ pc.defineParameter("num_nodes", "Number of Hadoop Worker Nodes",
     portal.ParameterType.INTEGER, 1, num_nodes)
 
 pc.defineParameter("dataset_urn", "URN for Dataset Storage",
-    portal.ParameterType.IMAGE, "")
+    portal.ParameterType.STRING, "")
 
 params = pc.bindParameters()
 
