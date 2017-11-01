@@ -34,7 +34,8 @@ repository is automatically cloned to `/mnt/dataset/ldbc_snb_datagen`.
 * Before experiment launch:
   * Modify configuration settings in `hadoop.conf` and `ldbc_snb_datagen.conf`
     directories. Configuration settings can of course be modified after the
-    experiment has been started.
+    experiment has been started. The defaults in the configuration files for
+    Hadoop are set for a cluster of m510 machines.
 * After experiment startup and ssh'ing into the master node:
   * `cd /opt/hadoop-2.6.0`
   * `bin/hdfs namenode -format`
@@ -77,3 +78,8 @@ updates to the LDBC SNB data generator.
   * The script `paramgenerator/generateparams.py` takes over 12 hours to
     complete on an Intel Xeon-D machine with 64GB of DDR4 memory (CloudLab m510
     machine) for the SF1000 dataset. 
+
+
+## Additional Notes ##
+* The SF1000 data was successfully generated using 20x m510 machines with 200GB
+  of local disk storage allocated per machine.
