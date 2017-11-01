@@ -56,7 +56,7 @@ repository is automatically cloned to `/mnt/dataset/ldbc_snb_datagen`.
   local disk in the `ldbc_snb_datagen` directory under
   `substitution_parameters`.
 
-# Notes on LDBC SNB Datagen #
+## Notes on LDBC SNB Datagen ##
 These notes are relevant at the time of writing and may change with future
 updates to the LDBC SNB data generator.
 * `walkmod` dependence results in an error at compile time, so this is
