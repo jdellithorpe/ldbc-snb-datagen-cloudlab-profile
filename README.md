@@ -3,7 +3,7 @@ CloudLab Profile for Generating LDBC SNB Datasets
 
 This is a CloudLab repository-based profile for setting up experiments for
 generating LDBC SNB datasets. The experiment nodes are setup for running Hadoop
-2.6.0 and the [LDBC SNB data generator] (https://github.com/ldbc/ldbc_snb_datagen).
+2.6.0 and the [LDBC SNB data generator](https://github.com/ldbc/ldbc_snb_datagen).
 
 The directory structure has the following important directories:
 ```
