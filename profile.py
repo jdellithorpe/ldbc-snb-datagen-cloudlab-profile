@@ -51,13 +51,13 @@ for i in range(params.num_nodes):
 
 # Setup a LAN for the clients
 if num_nodes > 0:
-  clan = request.LAN()
+  clan = request.LAN("clan")
   clan.best_effort = True
   clan.vlan_tagging = True
   clan.link_multiplexing = True
 
 # Setup a LAN just for the dataset blockstore
-datasetbslan = request.LAN()
+datasetbslan = request.LAN("dslan")
 datasetbslan.best_effort = True
 datasetbslan.vlan_tagging = True
 datasetbslan.link_multiplexing = True

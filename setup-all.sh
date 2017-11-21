@@ -2,42 +2,35 @@
 
 # General system software update
 apt-get update
-
 # Install common utilities
 apt-get --assume-yes install mosh vim tmux pdsh tree axel htop ctags 
-
 # NFS stuff
 apt-get --assume-yes install nfs-kernel-server nfs-common
-
 # Java stuff
 apt-get --assume-yes install openjdk-7-jdk maven
 
 # Collect slave names and IPs in the cluster
-while read -r ip linkin linkout hostname
+while read -r ip hostname alias1 alias2 alias3
 do 
-  if [[ $hostname =~ ^n[0-9]+$ ]] 
+  if [[ $hostname =~ ^n[0-9]+-clan$ ]] 
   then
     slavenames=("${slavenames[@]}" "$hostname") 
-    slaveips=("${ips[@]}" "$ip") 
+    slaveips=("${slaveips[@]}" "$ip") 
   fi 
 done < /etc/hosts
 
-IFS=$'\n' slavenames=($(sort <<<"${slavenames[*]}"))
-IFS=$'\n' slaveips=($(sort <<<"${slaveips[*]}"))
-unset IFS
-
-# Set some environment variables
-cat > /etc/profile <<EOM
-
-export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64
+# Configure some environment variables and settings for all users on all
+# machines.
+cat >> /etc/profile.d/etc.sh <<EOM
 export EDITOR=vim
 export SLAVEIPS="${slaveips[@]}"
 export SLAVENAMES="${slavenames[@]}"
 export HOSTNAMES="master ${slavenames[@]}"
 EOM
+chmod ugo+x /etc/profile.d/etc.sh
 
 # Modify ssh config
-cat > /etc/ssh/ssh_config <<EOM
+cat >> /etc/ssh/ssh_config <<EOM
     StrictHostKeyChecking no
 EOM
 
