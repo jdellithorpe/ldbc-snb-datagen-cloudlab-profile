@@ -4,7 +4,7 @@
 apt-get update
 
 # Install common utilities
-apt-get --assume-yes install mosh vim tmux pdsh tree axel
+apt-get --assume-yes install mosh vim tmux pdsh tree axel htop ctags 
 
 # NFS stuff
 apt-get --assume-yes install nfs-kernel-server nfs-common
