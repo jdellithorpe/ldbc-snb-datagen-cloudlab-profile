@@ -14,7 +14,7 @@ import geni.urn as urn
 # Directory where CloudLab remote datasets will be mounted (on NFS server).
 remote_blockstore_mount_point = "/remote"
 # Local blockstore partition on each server.
-local_blockstore_mount_point = "/local"
+local_blockstore_mount_point = "/local/store"
 # NFS shared home directory for all users.
 nfs_shared_home_dir = "/shome"
 # NFS directory for sharing mounted datasets.
