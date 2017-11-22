@@ -19,10 +19,10 @@
 <configuration>
     <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://master:9000</value>
+        <value>hdfs://master-clan:9000</value>
     </property>
     <property>
         <name>hadoop.tmp.dir</name>
-        <value>/local/hadoop</value>
+        <value>/local</value>
     </property>
 </configuration>

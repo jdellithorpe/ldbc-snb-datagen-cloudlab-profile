@@ -5,95 +5,115 @@ Instructions:
 TBD
 """
 
-# Import the Portal object.
-import geni.portal as portal
-# Import the ProtoGENI library.
-import geni.rspec.pg as pg
-
-import geni.urn as urn
 import geni.aggregate.cloudlab as cloudlab
+import geni.portal as portal
+import geni.rspec.pg as pg
+import geni.urn as urn
 
-# Create a portal context.
+# === Parameters for this profile ===
+# Directory where CloudLab remote datasets will be mounted (on NFS server).
+remote_blockstore_mount_point = "/remote"
+# Local blockstore partition on each server.
+local_blockstore_mount_point = "/local"
+# NFS shared home directory for all users.
+nfs_shared_home_dir = "/shome"
+# NFS directory for sharing mounted datasets.
+nfs_shared_datasets_dir = "/datasets"
+
+# Portal context is where parameters and the rspec request is defined.
 pc = portal.Context()
+
+# The possible set of base disk-images that this cluster can be booted with.
+# The second field of every tupule is what is displayed on the cloudlab
+# dashboard.
+images = [ ("UBUNTU14-64-STD", "Ubuntu 14.04") ]
+
+# The possible set of node-types this cluster can be configured with. Currently 
+# only m510 machines are supported.
+hardware_types = [ ("m510", "m510 (CloudLab Utah, Intel Xeon-D)") ]
+
+pc.defineParameter("image", "Disk Image",
+        portal.ParameterType.IMAGE, images[0], images,
+        "Specify the base disk image that all the nodes of the cluster " +\
+        "should be booted with.")
+
+pc.defineParameter("hardware_type", "Hardware Type", 
+        portal.ParameterType.NODETYPE, hardware_types[0], hardware_types)
+
+pc.defineParameter("username", "Username", 
+        portal.ParameterType.STRING, "", None,
+        "Username for which all user-specific software will be configured.")
+
+pc.defineParameter("num_nodes", "Number of Hadoop Worker Nodes",
+        portal.ParameterType.INTEGER, 3, [])
+
+pc.defineParameter("dataset_urns", "Datasets", 
+        portal.ParameterType.STRING, "", None,
+        "Space separated list of datasets to mount. All datasets are " +\
+        "mounted on master at " + remote_blockstore_mount_point)
+
+params = pc.bindParameters()
 
 # Create a Request object to start building the RSpec.
 request = pc.makeRequestRSpec()
 
-hardware_types = [ ("m510", "m510 (CloudLab Utah, Intel Xeon-D)"),
-                   ("m400", "m400 (CloudLab Utah, 64-bit ARM)"),
-                   ("c220g2", "c220g2 (CloudLab Wisconsin, Two Intel E5-2660 v3)") ]
+# Create a local area network for the Hadoop cluster.
+clan = request.LAN("clan")
+clan.best_effort = True
+clan.vlan_tagging = True
+clan.link_multiplexing = True
 
-images = [ ("UBUNTU14-64-STD", "Ubuntu 14.04"),
-           ("UBUNTU15-04-64-STD", "Ubuntu 15.04"),
-           ("UBUNTU16-64-STD", "Ubuntu 16.04")]
+# Create a special network for connecting datasets to NFS
+dslan = request.LAN("dslan")
+dslan.best_effort = True
+dslan.vlan_tagging = True
+dslan.link_multiplexing = True
 
-# Create configuration parameter for the number of client nodes.
-num_nodes = range(0,1000)
+# Create array of the requested datasets
+dataset_urns = params.dataset_urns.split(" ")
 
-pc.defineParameter("hardware_type", "Hardware Type",
-                   portal.ParameterType.NODETYPE, 
-                   hardware_types[0], hardware_types)
+for i in range(len(dataset_urns)):
+    dataset_urn = dataset_urns[i]
+    dataset_name = dataset_urn[dataset_urn.rfind("+") + 1:]
+    rbs = request.RemoteBlockstore(
+            "dataset%02d" % (i + 1), 
+            remote_blockstore_mount_point + "/" + dataset_name, 
+            "if1")
+    rbs.dataset = dataset_urn
+    dslan.addInterface(rbs.interface)
 
-pc.defineParameter("image", "Disk Image",
-        portal.ParameterType.IMAGE, images[0], images)
-
-pc.defineParameter("num_nodes", "Number of Hadoop Worker Nodes", 
-    portal.ParameterType.INTEGER, 1, num_nodes)
-
-pc.defineParameter("dataset_urn", "URN for Dataset Storage",
-    portal.ParameterType.STRING, "")
-
-params = pc.bindParameters()
-
-node_names = ["master"]
+# Setup hostnames
+hostnames = ["master", "nfs"]
 for i in range(params.num_nodes):
-  node_names.append("n%02d" % (i + 1))
+    hostnames.append("n%02d" % (i + 1))
 
-# Setup a LAN for the clients
-if num_nodes > 0:
-  clan = request.LAN("clan")
-  clan.best_effort = True
-  clan.vlan_tagging = True
-  clan.link_multiplexing = True
+for host in hostnames:
+    node = request.RawPC(host)
+    node.hardware_type = params.hardware_type
+    node.disk_image = urn.Image(cloudlab.Utah, "emulab-ops:%s" % params.image)
 
-# Setup a LAN just for the dataset blockstore
-datasetbslan = request.LAN("dslan")
-datasetbslan.best_effort = True
-datasetbslan.vlan_tagging = True
-datasetbslan.link_multiplexing = True
-
-for name in node_names:
-  node = request.RawPC(name)
-  node.hardware_type = params.hardware_type
-  if node.hardware_type == "c220g2":
-    node.disk_image = urn.Image(cloudlab.Wisconsin,"emulab-ops:%s" % params.image)
-  else:
-    node.disk_image = urn.Image(cloudlab.Utah,"emulab-ops:%s" % params.image)
-
-  # Ask for a 200GB file system mounted at /local/hadoop
-  # This is for all hadoop related data
-  localbs = node.Blockstore(name + "localbs", "/local/hadoop")
-  if node.hardware_type == "c220g2":
-    localbs.size = "1000GB"
-  else:
+    # Allocate the rest of the space on disk for a local storage partition. The
+    # hadoop nodes use this for storing HDFS data, and the NFS server uses it
+    # to store users shared home directories. 
+    localbs = node.Blockstore(host + "localbs", local_blockstore_mount_point)
     localbs.size = "200GB"
 
-  node.addService(pg.Execute(shell="sh", 
-      command="sudo /local/repository/setup-all.sh"))
+    # All hosts are on the client LAN. 
+    clan.addInterface(node.addInterface("if1"))
 
-  if num_nodes > 0:
-    iface = node.addInterface("if1")
-    clan.addInterface(iface)
-
-  if name == "master":
-    datasetbs = request.RemoteBlockstore("datasetbs", "/mnt/dataset", "if1")
-    datasetbs.dataset = params.dataset_urn
-    datasetbslan.addInterface(datasetbs.interface)
-    datasetbsiface = node.addInterface("if2")
-    datasetbslan.addInterface(datasetbsiface)
-    
+    # Run setup script after experiment instantiation.
     node.addService(pg.Execute(shell="sh", 
-        command="sudo /local/repository/setup-master.sh"))
+        command="sudo /local/repository/setup.sh %s %s %s %s %s" % \
+        (local_blockstore_mount_point, 
+        remote_blockstore_mount_point, 
+        nfs_shared_home_dir,
+        nfs_shared_datasets_dir,
+        params.username)))
+
+    # In the case of the NFS server, add it to the dataset LAN so that it can
+    # export these datasets to the reset of the servers in the cluster.
+    if host == "nfs":
+        dslan.addInterface(node.addInterface("if2"))
 
 # Print the RSpec to the enclosing page.
 pc.printRequestRSpec(request)
