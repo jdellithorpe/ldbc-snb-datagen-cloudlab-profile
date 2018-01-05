@@ -32,3 +32,8 @@ done
 # Download LDBC SNB datagenerator
 git clone https://github.com/ldbc/ldbc_snb_datagen.git
 cp /local/repository/ldbc_snb_datagen.conf/* ./ldbc_snb_datagen/
+
+# Configure with my personal machine settings
+git clone http://github.com/jdellithorpe/config.git
+cd $HOME/config
+./cloudlab/setup.sh
